@@ -21,17 +21,12 @@ jobs:
       run: |
         npm install
         npm run build:test --if-present
-    - name: Publish Docker
-      uses: elgohr/Publish-Docker-Github-Action@2.11
-      with:
-        # The name of the image you would like to push
-        name: ${{secrets.DOCKER_PROGRAM}}
-        # The login username for the registry
-        username: ${{secrets.DOCKER_USERNAME}}
-        # The login password for the registry
-        password: ${{secrets.DOCKER_PASSWORD}}
-          # Use registry for pushing to a custom registry
-        registry: ${{secrets.DOCKER_REGISTRY}}
+    - name: Build Image
+      run: docker build -t ${{ secrets.DOCKER_REPOSITORY }}:latest ./
+    - name: Login to registry
+      run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com
+    - name: Push Image
+      run: docker push ${{ secrets.DOCKER_REPOSITORY }}:latest
   pull-docker:
     needs: [build]
     name: Pull Docker

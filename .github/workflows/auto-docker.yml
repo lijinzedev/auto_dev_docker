@@ -20,7 +20,7 @@ jobs:
     - name: npm install, build, and test
       run: |
         npm install
-        npm run build:test --if-present
+        npm run build:prod
     - name: Build Image
       run: docker build -t ${{ secrets.DOCKER_REPOSITORY }}:latest ./
     - name: Login to registry
